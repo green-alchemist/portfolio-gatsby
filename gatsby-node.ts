@@ -29,9 +29,7 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
     }
   `)
 
-  reporter.info("WHATS HAPPENING")
-
-  // reporter.info(data)
+  reporter.info("Inside createPages")
 
 }
 
