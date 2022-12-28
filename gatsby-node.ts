@@ -1,5 +1,9 @@
 import type { GatsbyNode } from "gatsby"
 import { createFilePath } from "gatsby-source-filesystem"
+import BlogPostTemplate from "./src/templates/blog-post"
+const path = require(`path`)
+
+// const blogPost = path.resolve(`./src/templates/blog-post.tsx`)
 
 type Person = {
   id: number
@@ -9,8 +13,9 @@ type Person = {
 
 export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions, reporter }) => {
   const seen = new Set()
+  const { createPage } = actions
 
-  const { data }: any = await graphql(`
+  const { data } = await graphql(`
     query {
       allMarkdownRemark {
         nodes {
@@ -28,8 +33,29 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
       }
     }
   `)
+  // result.data.allMarkdownRemark.nodes.forEach( (node : any) => {
+  //   reporter.info(node)
+  // })
+  // console.log(data.allMarkdownRemark.nodes)
 
-  reporter.info("Inside createPages")
+  const posts = data.allMarkdownRemark.nodes
+  if (posts.length > 0) {
+    posts.forEach((post, index) => {
+      console.log("POST: ", post)
+      const previousPostId = index === 0 ? null : posts[index - 1].id
+      const nextPostId = index === posts.length - 1 ? null : posts[index + 1].id
+
+      createPage({
+        path: post.fields.slug,
+        component: path.resolve(`./src/templates/blog-post.tsx`),
+        context: {
+          id: post.id,
+          previousPostId,
+          nextPostId,
+        },
+      })
+    })
+  }
 
 }
 
@@ -38,7 +64,7 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
 export const onCreateNode: GatsbyNode["onCreateNode"] = async ({ node, actions, getNode }) => {
   const { createNodeField } = actions
 
-  console.log("INSIDE : Gatsby-NODE FILE")
+  // console.log("INSIDE : Gatsby-NODE FILE")
   
   if (node.internal.type === `MarkdownRemark`) {
     const value = createFilePath({ node, getNode })
