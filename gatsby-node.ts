@@ -1,22 +1,27 @@
 import type { GatsbyNode } from "gatsby"
 import { createFilePath } from "gatsby-source-filesystem"
-import BlogPostTemplate from "./src/templates/blog-post"
+
 const path = require(`path`)
+const blogPost = path.resolve(`./src/templates/blog-post.tsx`)
 
-// const blogPost = path.resolve(`./src/templates/blog-post.tsx`)
+// type Person1 = {
+//   id: number
+//   name: string
+//   age: number
+// }
+// interface Person {
+//   id: number
+//   name: string
+//   age: number
+//   family: Person1
+// }
 
-type Person = {
-  id: number
-  name: string
-  age: number
-}
-
-export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions, reporter }) => {
-  const seen = new Set()
+export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions }) => {
+  // const seen = new Set()
   const { createPage } = actions
 
   const { data } = await graphql(`
-    query {
+    query BlogPostQuery{
       allMarkdownRemark {
         nodes {
           id
@@ -33,21 +38,22 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
       }
     }
   `)
-  // result.data.allMarkdownRemark.nodes.forEach( (node : any) => {
-  //   reporter.info(node)
-  // })
-  // console.log(data.allMarkdownRemark.nodes)
+
+  if (data.errors) throw data.errors
 
   const posts = data.allMarkdownRemark.nodes
   if (posts.length > 0) {
-    posts.forEach((post, index) => {
-      console.log("POST: ", post)
+    posts.forEach((post: any, index: number) => {
+      console.log("POST #: ", index)
+
       const previousPostId = index === 0 ? null : posts[index - 1].id
       const nextPostId = index === posts.length - 1 ? null : posts[index + 1].id
 
+      // context gets passed to the page function component for use in the pageQuery
+      // component seems to be looking for a file path and not the actual function component which is exported, still need to dive into the reference
       createPage({
         path: post.fields.slug,
-        component: path.resolve(`./src/templates/blog-post.tsx`),
+        component: blogPost,
         context: {
           id: post.id,
           previousPostId,
@@ -56,7 +62,6 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
       })
     })
   }
-
 }
 
 
