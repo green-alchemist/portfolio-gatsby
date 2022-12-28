@@ -8,8 +8,8 @@
 ### Steps to reproduce basic gatsby app with docker for local development:
 ---
 **Pick your poison NPM or Yarn.** [gatsby-cli](https://www.gatsbyjs.com/docs/reference/gatsby-cli)
-- `npm install --global gatsby-cli` 
 - `yarn add global gatsby-cli`
+- `npm install --global gatsby-cli` 
 ---
 
 We then run `gatsby new` where we want to create our project. and we follow the prompt for setting up a new project.
