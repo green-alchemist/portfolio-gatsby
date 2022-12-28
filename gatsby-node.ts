@@ -50,7 +50,7 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
       const nextPostId = index === posts.length - 1 ? null : posts[index + 1].id
 
       // context gets passed to the page function component for use in the pageQuery
-      // component seems to be looking for a file path and not the actual function component which is exported, still need to dive into the reference
+      // component seems to be looking for a file path and not the actual function component which is exported
       createPage({
         path: post.fields.slug,
         component: blogPost,
