@@ -7,4 +7,4 @@ WORKDIR /app
 COPY ./package.json .
 RUN yarn install
 
-CMD [ "yarn", "develop", "-H", "0.0.0.0"]
+CMD [ "yarn", "develop", "--verbose", "-H", "0.0.0.0"]
