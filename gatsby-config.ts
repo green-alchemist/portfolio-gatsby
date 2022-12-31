@@ -27,13 +27,6 @@ const config: GatsbyConfig = {
       options: strapiConfig,
     },
     {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        path: `${__dirname}/content`,
-        name: `blog`,
-      },
-    },
-    {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
