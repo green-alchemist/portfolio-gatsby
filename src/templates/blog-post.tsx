@@ -3,11 +3,11 @@ import { graphql, PageProps } from "gatsby"
 
 const BlogPostTemplate: React.FC<PageProps> = (props) => {
   console.log("blog template", props)
-  const post = props.data.markdownRemark
+  const post = props.data.strapiPost
   return (
     <div>
-      <h1>{post.frontmatter.title}</h1>
-      <div dangerouslySetInnerHTML={{ __html: post.html }} />
+      <h1>{post.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: post.body.data.body }} />
     </div>
   )
 }
@@ -27,31 +27,25 @@ export const pageQuery = graphql`
         title
       }
     }
-    markdownRemark(id: { eq: $id }) {
-      id
-      excerpt(pruneLength: 160)
-      html
-      frontmatter {
-        title
-        date(formatString: "MMMM DD, YYYY")
-        description
+    strapiPost(id: {eq: $id}) {
+      body {
+        data {
+          body
+        }
       }
+      slug
+      title
+      publishedAt
     }
-    previous: markdownRemark(id: { eq: $previousPostId }) {
-      fields {
-        slug
-      }
-      frontmatter {
-        title
-      }
+    previous: strapiPost(id: { eq: $previousPostId }) {
+      slug
+      title
+      publishedAt
     }
-    next: markdownRemark(id: { eq: $nextPostId }) {
-      fields {
-        slug
-      }
-      frontmatter {
-        title
-      }
+    next: strapiPost(id: { eq: $nextPostId }) {
+      slug
+      title
+      publishedAt
     }
   }
 `
