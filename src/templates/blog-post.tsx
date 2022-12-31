@@ -7,7 +7,7 @@ const BlogPostTemplate: React.FC<PageProps> = (props) => {
   return (
     <div>
       <h1>{post.title}</h1>
-      <div dangerouslySetInnerHTML={{ __html: post.body.data.body }} />
+      <div dangerouslySetInnerHTML={{ __html: post.body.data.childMarkdownRemark.html }} />
     </div>
   )
 }
@@ -31,6 +31,9 @@ export const pageQuery = graphql`
       body {
         data {
           body
+          childMarkdownRemark {
+            html
+          }
         }
       }
       slug

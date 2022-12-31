@@ -17,6 +17,9 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
           id
           body {
             data {
+              childMarkdownRemark {
+                html
+              }
               body
               id
               internal {

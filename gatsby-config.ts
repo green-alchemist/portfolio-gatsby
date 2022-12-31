@@ -23,6 +23,7 @@ const config: GatsbyConfig = {
       resolve: `gatsby-source-strapi`,
       options: strapiConfig,
     },
+    `gatsby-transformer-remark`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
   ]
