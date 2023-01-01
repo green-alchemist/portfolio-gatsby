@@ -6,3 +6,4 @@ src/gatsby-types.d.ts
 
 *.sh
 data.*
+.DS_Store

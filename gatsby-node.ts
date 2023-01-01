@@ -58,7 +58,7 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
       //   assert.fail(`"${path}" already exists`)
       // }
       // seen.add(path)
-      console.log("POST #: ", index, post)
+      console.log("POST #: ", index)
 
       const previousPostId = index === 0 ? null : posts[index - 1].id
       const nextPostId = index === posts.length - 1 ? null : posts[index + 1].id
@@ -82,6 +82,14 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
   }
 }
 
+export const onCreatePage: GatsbyNode["onCreatePage"] = async ({ page, actions }) => {
+  const { createPage } = actions
+  
+  if (page.path === '/') {
+    page.matchPath = '/*'
+    createPage(page)
+  }
+}
 
 // Example of adding custom fields to a node
 export const onCreateNode: GatsbyNode["onCreateNode"] = async ({ node, actions, getNode }) => {
