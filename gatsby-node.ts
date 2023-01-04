@@ -4,6 +4,7 @@ import assert from "node:assert"
 // import { createFilePath } from "gatsby-source-filesystem"
 
 const blogPost = path.resolve(`./src/templates/blog-post.tsx`)
+// const blogPage = path.resolve('./src/templates/blog-page.tsx')
 
 
 export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions }) => {
@@ -22,17 +23,6 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
               }
               body
               id
-              internal {
-                description
-                contentFilePath
-                content
-                contentDigest
-                fieldOwners
-                type
-                owner
-                mediaType
-                ignoreType
-              }
             }
           }
           slug
@@ -68,7 +58,7 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
       if (post && post.slug !== null) {
 
         createPage({
-          path: post.slug,
+          path: `blog/${post.slug}`,
           component: blogPost,
           context: {
             id: post.id,
@@ -84,7 +74,7 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
 
 export const onCreatePage: GatsbyNode["onCreatePage"] = async ({ page, actions }) => {
   const { createPage } = actions
-  
+
   if (page.path === '/') {
     page.matchPath = '/*'
     createPage(page)
@@ -121,28 +111,51 @@ export const onCreateNode: GatsbyNode["onCreateNode"] = async ({ node, actions, 
 */
 
 // Example for sourceNodes
-// export const sourceNodes: GatsbyNode["sourceNodes"] = async ({
-//   actions,
-//   createNodeId,
-//   createContentDigest,
-// }) => {
-//   const { createNode } = actions
+export const sourceNodes: GatsbyNode["sourceNodes"] = async ({
+  actions,
+  createNodeId,
+  createContentDigest,
+}) => {
+  const { createNode } = actions
 
-//   const data = await getSomeData()
+  const myData = {
+    key: 123,
+    foo: `The foo field of my node`,
+    bar: `Baz`
+  }
+  const nodeContent = JSON.stringify(myData)
 
-//   data.forEach((person: Person) => {
-//     const node = {
-//       ...person,
-//       parent: null,
-//       children: [],
-//       id: createNodeId(`person__${person.id}`),
-//       internal: {
-//         type: "Person",
-//         content: JSON.stringify(person),
-//         contentDigest: createContentDigest(person),
-//       },
-//     }
+  const nodeMeta = {
+    id: createNodeId(`my-data-${myData.key}`),
+    parent: null,
+    children: [],
+    internal: {
+      type: `MyNodeType`,
+      mediaType: `text/html`,
+      content: nodeContent,
+      contentDigest: createContentDigest(myData)
+    }
+  }
+  const node = Object.assign({}, myData, nodeMeta)
 
-//     createNode(node)
-//   })
-// }
+  console.log(`Inside Source Nodes node: ${JSON.stringify(node)}`)
+
+  createNode(node)
+
+  // const data = await getSomeData()
+
+  // data.forEach((person: Person) => {
+  //   const node = {
+  //     ...person,
+  //     parent: null,
+  //     children: [],
+  //     id: createNodeId(`person__${person.id}`),
+  //     internal: {
+  //       type: "Person",
+  //       content: JSON.stringify(person),
+  //       contentDigest: createContentDigest(person),
+  //     },
+  //   }
+
+  // })
+}

@@ -4,11 +4,22 @@ import { graphql, PageProps } from "gatsby"
 const BlogPostTemplate: React.FC<PageProps> = (props) => {
   console.log("blog template", props)
   const post = props.data.strapiPost
+
+  if (post.previous) {
+
+  }
+
+  if (post.next) {
+    
+  }
+
   return (
-    <div>
-      <h1>{post.title}</h1>
-      <div dangerouslySetInnerHTML={{ __html: post.body.data.childMarkdownRemark.html }} />
-    </div>
+    <>
+      <div>
+        <h1>{post.title}</h1>
+        <div dangerouslySetInnerHTML={{ __html: post.body.data.childMarkdownRemark.html }} />
+      </div>
+    </>
   )
 }
 
