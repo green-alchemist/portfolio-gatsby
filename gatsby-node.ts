@@ -1,10 +1,7 @@
 import type { GatsbyNode } from "gatsby"
 import path from "node:path"
-import assert from "node:assert"
-// import { createFilePath } from "gatsby-source-filesystem"
 
 const blogPost = path.resolve(`./src/templates/blog-post.tsx`)
-// const blogPage = path.resolve('./src/templates/blog-page.tsx')
 
 
 export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions }) => {
@@ -48,7 +45,7 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
       //   assert.fail(`"${path}" already exists`)
       // }
       // seen.add(path)
-      console.log("POST #: ", index)
+      // console.log("POST #: ", index)
 
       const previousPostId = index === 0 ? null : posts[index - 1].id
       const nextPostId = index === posts.length - 1 ? null : posts[index + 1].id
@@ -82,25 +79,25 @@ export const onCreatePage: GatsbyNode["onCreatePage"] = async ({ page, actions }
 }
 
 // Example of adding custom fields to a node
-export const onCreateNode: GatsbyNode["onCreateNode"] = async ({ node, actions, getNode }) => {
-  const { createNodeField } = actions
+// export const onCreateNode: GatsbyNode["onCreateNode"] = async ({ node, actions, getNode }) => {
+//   const { createNodeField } = actions
 
-  console.log("INSIDE : Gatsby-Node internal type: ", node.internal.type)
-  if (node.internal.type !== 'SitePlugin') {
-    // console.log("Node OBJ: ", node)
+//   // console.log("INSIDE : Gatsby-Node internal type: ", node.internal.type)
+//   // if (node.internal.type !== 'SitePlugin') {
+//   //   // console.log("Node OBJ: ", node)
 
-  }
-  if (node.internal.type === `MarkdownRemark`) {
-    // const value = createFilePath({ node, getNode })
-    // console.log("VALUE: ", value)
+//   // }
+//   // if (node.internal.type === `MarkdownRemark`) {
+//   //   // const value = createFilePath({ node, getNode })
+//   //   // console.log("VALUE: ", value)
 
-    // createNodeField({
-    //   name: `slug`,
-    //   node,
-    //   "value":"value",
-    // })
-  }
-}
+//   //   // createNodeField({
+//   //   //   name: `slug`,
+//   //   //   node,
+//   //   //   "value":"value",
+//   //   // })
+//   // }
+// }
 
 
 
@@ -111,51 +108,34 @@ export const onCreateNode: GatsbyNode["onCreateNode"] = async ({ node, actions, 
 */
 
 // Example for sourceNodes
-export const sourceNodes: GatsbyNode["sourceNodes"] = async ({
-  actions,
-  createNodeId,
-  createContentDigest,
-}) => {
-  const { createNode } = actions
+// export const sourceNodes: GatsbyNode["sourceNodes"] = async ({
+//   actions,
+//   createNodeId,
+//   createContentDigest,
+// }) => {
+//   const { createNode } = actions
 
-  const myData = {
-    key: 123,
-    foo: `The foo field of my node`,
-    bar: `Baz`
-  }
-  const nodeContent = JSON.stringify(myData)
+//   const myData = {
+//     key: 123,
+//     foo: `The foo field of my node`,
+//     bar: `Baz`
+//   }
+//   const nodeContent = JSON.stringify(myData)
 
-  const nodeMeta = {
-    id: createNodeId(`my-data-${myData.key}`),
-    parent: null,
-    children: [],
-    internal: {
-      type: `MyNodeType`,
-      mediaType: `text/html`,
-      content: nodeContent,
-      contentDigest: createContentDigest(myData)
-    }
-  }
-  const node = Object.assign({}, myData, nodeMeta)
+//   const nodeMeta = {
+//     id: createNodeId(`my-data-${myData.key}`),
+//     parent: null,
+//     children: [],
+//     internal: {
+//       type: `MyNodeType`,
+//       mediaType: `text/html`,
+//       content: nodeContent,
+//       contentDigest: createContentDigest(myData)
+//     }
+//   }
+//   const node = Object.assign({}, myData, nodeMeta)
 
-  console.log(`Inside Source Nodes node: ${JSON.stringify(node)}`)
+//   console.log(`Inside Source Nodes node: ${JSON.stringify(node)}`)
 
-  createNode(node)
-
-  // const data = await getSomeData()
-
-  // data.forEach((person: Person) => {
-  //   const node = {
-  //     ...person,
-  //     parent: null,
-  //     children: [],
-  //     id: createNodeId(`person__${person.id}`),
-  //     internal: {
-  //       type: "Person",
-  //       content: JSON.stringify(person),
-  //       contentDigest: createContentDigest(person),
-  //     },
-  //   }
-
-  // })
-}
+//   createNode(node)
+// }
