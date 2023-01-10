@@ -18,7 +18,7 @@ Without docker we can jut start working on the project with:
 - or
 - `npm install && npm run develop`
 ---
-The following is my development `Dockerfile`
+The following is the development `Dockerfile`
 ```
 FROM node:18
 
@@ -30,7 +30,9 @@ RUN yarn install
 
 CMD [ "yarn", "develop" , "-H", "0.0.0.0"]
 ```
-And my accompanying `docker-compose.yml` because who uses docker locally without compose?
+And the accompanying `docker-compose.yml` because who uses docker locally without compose?
+
+Caveat when using gatsby with docker locally it needs network access to strapi/whatever data used in data layer. 
 
 ```
 version: "3"
