@@ -7,3 +7,8 @@ src/gatsby-types.d.ts
 *.sh
 data.*
 .DS_Store
+# .yarn/ added when trying out yarn 3
+
+
+.terraform.*
+.terraform/
