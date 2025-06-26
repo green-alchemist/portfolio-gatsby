@@ -8,7 +8,7 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
   // const seen = new Set()
   const { createPage } = actions
 
-  const { data } = await graphql(`
+  const { data }: any = await graphql(`
     query BlogPostQuery{
       allStrapiPost {
         nodes {
@@ -33,7 +33,6 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
       }
     }
   `)
-
   // if (data.errors) throw data.errors
 
   const posts = data.allStrapiPost.nodes

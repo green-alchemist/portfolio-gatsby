@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:20
 
 RUN yarn global add gatsby-cli
 RUN gatsby telemetry --disable
@@ -7,4 +7,6 @@ WORKDIR /app
 COPY ./package.json .
 RUN yarn install
 
-CMD [ "yarn", "develop", "--verbose", "-H", "0.0.0.0"]
+EXPOSE 8000
+
+CMD [ "yarn", "dev", "--verbose", "-H", "0.0.0.0"]

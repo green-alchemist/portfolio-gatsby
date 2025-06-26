@@ -2,12 +2,11 @@ import type { GatsbyConfig } from "gatsby";
 require('dotenv').config({
   path: `.env`,
 });
-// `.env.${process.env.NODE_ENV}`
 
 const strapiConfig = {
-  apiURL: process.env.STRAPI_API_URL,
+  apiURL: process.env.STRAPI_API_URL || "http://localhost:1337",
   accessToken: process.env.STRAPI_TOKEN,
-  collectionTypes: ['user', 'post'],
+  collectionTypes: ['user', 'post', 'category'],
   singleTypes: ['header'],
 };
 
