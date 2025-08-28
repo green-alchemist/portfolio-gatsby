@@ -1,6 +1,6 @@
 import type { GatsbyBrowser } from "gatsby";
 import React from "react";
-import Layout from './src/components/Layout';
+import Layout from './src/components/layout';
 
 export const wrapPageElement: GatsbyBrowser["wrapPageElement"] = ({ element, props }) => {
   console.log("Gatsby-SSR file: ", props)
