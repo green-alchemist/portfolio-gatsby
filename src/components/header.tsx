@@ -1,20 +1,94 @@
 
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'gatsby';
 
 // 1. Import the new custom hook
 import { useHeaderData } from '../hooks/use-header-data';
+
+import styled from '@emotion/styled';
+
+// --- Styled Components ---
+
+const StyledAppBar = styled.header`
+  background: #232129;
+  padding: 0 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+`;
+
+const Toolbar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const LogoLink = styled(Link)`
+  font-family: 'monospace', sans-serif;
+  font-weight: 700;
+  letter-spacing: .2rem;
+  color: white;
+  text-decoration: none;
+  font-size: 1.25rem;
+`;
+
+const NavLinksDesktop = styled.nav`
+  display: none; // Hidden on mobile by default
+  @media (min-width: 768px) {
+    display: flex; // Visible on desktop
+    gap: 1rem;
+  }
+`;
+
+const NavLinkStyled = styled(Link)`
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const HamburgerButton = styled.button`
+  display: block; // Visible on mobile by default
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 101; // Ensure it's above the overlay
+
+  @media (min-width: 768px) {
+    display: none; // Hidden on desktop
+  }
+`;
+
+const MobileNavOverlay = styled.nav<{ isOpen: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  opacity: ${props => (props.isOpen ? '1' : '0')};
+  visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
+`;
+
 
 // Define a type for our navigation links for better code safety
 type NavLink = {
@@ -27,6 +101,7 @@ function ResponsiveAppBar() {
   // 2. Call the custom hook to get the data.
   // The component no longer needs to know about GraphQL.
   const headerData = useHeaderData();
+  const [isMobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   // --- SAFETY CHECK ---
   // This prevents the site from crashing if the data is not available yet.
@@ -50,99 +125,42 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="fixed">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component={Link}
-            to="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            {siteTitle}
-          </Typography>
+    <StyledAppBar>
+      <Toolbar>
+        <LogoLink to="/">{siteTitle}</LogoLink>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {navLinks.map((link) => (
-                <MenuItem key={link.id} onClick={handleCloseNavMenu} component={Link} to={ensureAbsolutePath(link.path)}>
-                  <Typography textAlign="center">{link.title}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component={Link}
-            to="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
+        {/* Desktop Navigation */}
+        <NavLinksDesktop>
+          {navLinks.map((link) => (
+            <NavLinkStyled key={link.id} to={ensureAbsolutePath(link.path)}>
+              {link.title}
+            </NavLinkStyled>
+          ))}
+        </NavLinksDesktop>
+
+        {/* Mobile Hamburger Button */}
+        <HamburgerButton onClick={() => setMobileMenuOpen(!isMobileMenuOpen)} aria-label="Open navigation menu">
+          {/* Simple hamburger icon using divs */}
+          <div style={{ width: '24px', height: '2px', background: 'white', marginBottom: '5px' }}></div>
+          <div style={{ width: '24px', height: '2px', background: 'white', marginBottom: '5px' }}></div>
+          <div style={{ width: '24px', height: '2px', background: 'white' }}></div>
+        </HamburgerButton>
+      </Toolbar>
+
+      {/* Mobile Navigation Overlay */}
+      <MobileNavOverlay isOpen={isMobileMenuOpen}>
+        {navLinks.map((link) => (
+          <NavLinkStyled 
+            key={link.id} 
+            to={ensureAbsolutePath(link.path)} 
+            onClick={() => setMobileMenuOpen(false)} // Close menu on link click
+            style={{ fontSize: '1.5rem' }} // Make links larger on mobile overlay
           >
-            {siteTitle}
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {navLinks.map((link) => (
-              <Button
-                key={link.id}
-                component={Link}
-                to={ensureAbsolutePath(link.path)}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {link.title}
-              </Button>
-            ))}
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            {link.title}
+          </NavLinkStyled>
+        ))}
+      </MobileNavOverlay>
+    </StyledAppBar>
   );
 }
 export default ResponsiveAppBar;
