@@ -1,8 +1,11 @@
 import React from 'react';
-// import ResponsiveAppBar from './header';
+import ResponsiveAppBar from './header';
 import Footer from './footer';
 import styled from '@emotion/styled';
 import { Link, navigate } from 'gatsby';
+import Components from './button';
+import { Router } from '@reach/router';
+
 
 const Page = styled.div`
   display: flex;
@@ -18,21 +21,33 @@ const ChildWrapper = styled.div`
 
 
 export default function Layout({ children }) {
+
+  const [index, setCount ] = React.useState(1)
+  const btnFunc = () => {
+    setCount(x => x + 1)
+  }
+
+
   return (
     <Page className='page-wrapper'>
-      {/* <ResponsiveAppBar /> */}
+      <ResponsiveAppBar />
       <Link to="/">Home</Link>
-      <br />
       <br />
       <Link to="/blog">Blog</Link>
       <br />
       <Link to="/contact">Contact</Link>
       <br />
-      <Link to="/components">Components</Link>
-      <br />
       <Link to="/countdown">Countdown</Link>
+      <br />
+    
+      <Components counter={index} setCount={btnFunc}></Components>
       <ChildWrapper>
+      {/* <Router>
+      </Router> */}
+
+        
         { children }
+
       </ChildWrapper>
       <Footer />
     </ Page>

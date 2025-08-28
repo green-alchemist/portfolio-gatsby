@@ -1,4 +1,17 @@
-.cache/
-.circleci/
-node_modules/
-public/
+# Dependencies
+node_modules
+
+# Gatsby build artifacts
+.cache
+public
+
+# Environment variables (do not include secrets in the image)
+.env
+.env.*
+
+# CI/CD configuration
+.circleci
+
+
+.terraform.*
+.terraform/

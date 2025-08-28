@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Styled = styled.div`
-  color: red;
+  color: #2d2f31;
   display: flex;
   justify-content: center;
 `

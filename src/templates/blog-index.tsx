@@ -1,7 +1,6 @@
 import * as React from "react"
 import { graphql, PageProps, useStaticQuery } from "gatsby"
-import { blob } from "stream/consumers"
-import BlogItem from "../components/blog-item"
+import BlogItem from "../components/shared/blog-item"
 
 interface BlogItem {
   slug: string
@@ -27,7 +26,7 @@ const BlogPostTemplate: React.FC<PageProps> = (props) => {
           }
           slug
           title
-          publishedAt
+          publishedAt(formatString: "YYYY MMMM DD")
           updatedAt
           categories {
             id
@@ -37,8 +36,6 @@ const BlogPostTemplate: React.FC<PageProps> = (props) => {
     }
   `)
 
-  // const post = props.data.strapiPost
-  console.log(`Blog Page : `, gatsbyData)
   const blogList = gatsbyData.allStrapiPost.nodes.map((element: BlogItem) => {
     return <BlogItem key={element.slug} data={element} ></BlogItem>
   })

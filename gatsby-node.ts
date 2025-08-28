@@ -8,8 +8,8 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
   // const seen = new Set()
   const { createPage } = actions
 
-  const { data }: any = await graphql(`
-    query BlogPostQuery{
+  const { data, errors }: any = await graphql(`
+    query NodeCreatePagesQuery {
       allStrapiPost {
         nodes {
           id
@@ -31,8 +31,17 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
           }
         }
       }
+      strapiHeader {
+        title
+        navigation {
+          id
+          title
+        }
+      }
     }
   `)
+
+
   // if (data.errors) throw data.errors
 
   const posts = data.allStrapiPost.nodes
