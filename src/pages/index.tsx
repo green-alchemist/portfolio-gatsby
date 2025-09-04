@@ -28,9 +28,7 @@ const PageStyles = styled.div`
   padding: 96;
 `
 
-const Contact = React.lazy(() => import('../components/contact'));
-const Button = React.lazy(() => import('../components/button'));
-const Count = React.lazy(() => import('../components/countdown'));
+
 const BlogIndex = React.lazy(() => import('../templates/blog-index'));
 
 const LazyComponent = ({ Component, ...props }) => (
@@ -40,7 +38,7 @@ const LazyComponent = ({ Component, ...props }) => (
 );
 
 
-const Home: React.FC<PageProps> = () => {
+const IndexPage: React.FC<PageProps> = () => {
   return (
     <PageStyles>
       <h1 style={headingStyles}>
@@ -52,20 +50,20 @@ const Home: React.FC<PageProps> = () => {
   )
 }
 
-const IndexPage: React.FC<PageProps> = (props) => {
-  const [index, setCount ] = React.useState(1)
+// const IndexPage: React.FC<PageProps> = (props) => {
+//   const [index, setCount ] = React.useState(1)
 
-  return (
-    <div>
-      <Router>
-        <Home path="/" />
-        <LazyComponent Component={Contact} path="contact" />
-        <LazyComponent Component={Count} path="countdown" />
-        <LazyComponent Component={BlogIndex} path="blog" />
-      </Router>
-    </div>
-  )
-}
+//   return (
+//     <div>
+//       <Router>
+//         <Home path="/" />
+//         <LazyComponent Component={Contact} path="contact" />
+//         <LazyComponent Component={Count} path="countdown" />
+//         <LazyComponent Component={BlogIndex} path="blog" />
+//       </Router>
+//     </div>
+//   )
+// }
 
 export default IndexPage
 

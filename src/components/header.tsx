@@ -1,23 +1,19 @@
-
 import * as React from 'react';
 import { Link } from 'gatsby';
-
-// 1. Import the new custom hook
 import { useHeaderData } from '../hooks/use-header-data';
-
-import styled from '@emotion/styled';
+import styled from 'styled-components';
 
 // --- Styled Components ---
 
 const StyledAppBar = styled.header`
-  background: #232129;
+  background: ${props => props.theme.colors.surface};
   padding: 0 1rem;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 100;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-bottom: 1px solid #333;
 `;
 
 const Toolbar = styled.div`
@@ -30,45 +26,46 @@ const Toolbar = styled.div`
 `;
 
 const LogoLink = styled(Link)`
-  font-family: 'monospace', sans-serif;
-  font-weight: 700;
-  letter-spacing: .2rem;
-  color: white;
+  font-family: ${props => props.theme.fonts.code};
+  font-weight: ${props => props.theme.fontWeights.bold};
+  color: ${props => props.theme.colors.accent};
   text-decoration: none;
   font-size: 1.25rem;
 `;
 
 const NavLinksDesktop = styled.nav`
-  display: none; // Hidden on mobile by default
-  @media (min-width: 768px) {
-    display: flex; // Visible on desktop
+  display: none;
+  @media (min-width: ${props => props.theme.breakpoints.tablet}) {
+    display: flex;
     gap: 1rem;
   }
 `;
 
 const NavLinkStyled = styled(Link)`
-  color: white;
+  font-family: ${props => props.theme.fonts.heading};
+  color: ${props => props.theme.colors.secondaryText};
   text-decoration: none;
-  padding: 0.5rem 1rem;
+  padding: ${props => props.theme.spacing.s} ${props => props.theme.spacing.m};
   border-radius: 4px;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: ${props => props.theme.colors.accent};
+    color: ${props => props.theme.colors.background};
   }
 `;
 
 const HamburgerButton = styled.button`
-  display: block; // Visible on mobile by default
+  display: block;
   background: none;
   border: none;
   color: white;
   cursor: pointer;
-  padding: 0.5rem;
-  z-index: 101; // Ensure it's above the overlay
+  padding: ${props => props.theme.spacing.s};
+  z-index: 101;
 
-  @media (min-width: 768px) {
-    display: none; // Hidden on desktop
+  @media (min-width: ${props => props.theme.breakpoints.tablet}) {
+    display: none;
   }
 `;
 
@@ -78,46 +75,31 @@ const MobileNavOverlay = styled.nav<{ isOpen: boolean }>`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(18, 18, 18, 0.98);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  gap: ${props => props.theme.spacing.xl};
   transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
   opacity: ${props => (props.isOpen ? '1' : '0')};
   visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
+  z-index: 100;
 `;
 
-
-// Define a type for our navigation links for better code safety
 type NavLink = {
   id: string;
   title: string;
   path: string;
+  isSocial: boolean;
 };
 
 function ResponsiveAppBar() {
-  // 2. Call the custom hook to get the data.
-  // The component no longer needs to know about GraphQL.
   const headerData = useHeaderData();
   const [isMobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
-  // --- SAFETY CHECK ---
-  // This prevents the site from crashing if the data is not available yet.
   const navLinks: NavLink[] = headerData?.navigation?.filter(link => !link.isSocial) || [];
   const siteTitle = headerData?.title || 'KC';
-
-
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
 
   const ensureAbsolutePath = (path: string) => {
     if (!path) return '/';
@@ -128,8 +110,6 @@ function ResponsiveAppBar() {
     <StyledAppBar>
       <Toolbar>
         <LogoLink to="/">{siteTitle}</LogoLink>
-
-        {/* Desktop Navigation */}
         <NavLinksDesktop>
           {navLinks.map((link) => (
             <NavLinkStyled key={link.id} to={ensureAbsolutePath(link.path)}>
@@ -137,24 +117,19 @@ function ResponsiveAppBar() {
             </NavLinkStyled>
           ))}
         </NavLinksDesktop>
-
-        {/* Mobile Hamburger Button */}
         <HamburgerButton onClick={() => setMobileMenuOpen(!isMobileMenuOpen)} aria-label="Open navigation menu">
-          {/* Simple hamburger icon using divs */}
           <div style={{ width: '24px', height: '2px', background: 'white', marginBottom: '5px' }}></div>
           <div style={{ width: '24px', height: '2px', background: 'white', marginBottom: '5px' }}></div>
           <div style={{ width: '24px', height: '2px', background: 'white' }}></div>
         </HamburgerButton>
       </Toolbar>
-
-      {/* Mobile Navigation Overlay */}
       <MobileNavOverlay isOpen={isMobileMenuOpen}>
         {navLinks.map((link) => (
-          <NavLinkStyled 
-            key={link.id} 
-            to={ensureAbsolutePath(link.path)} 
-            onClick={() => setMobileMenuOpen(false)} // Close menu on link click
-            style={{ fontSize: '1.5rem' }} // Make links larger on mobile overlay
+          <NavLinkStyled
+            key={link.id}
+            to={ensureAbsolutePath(link.path)}
+            onClick={() => setMobileMenuOpen(false)}
+            style={{ fontSize: '1.5rem' }}
           >
             {link.title}
           </NavLinkStyled>
@@ -163,4 +138,6 @@ function ResponsiveAppBar() {
     </StyledAppBar>
   );
 }
+
 export default ResponsiveAppBar;
+

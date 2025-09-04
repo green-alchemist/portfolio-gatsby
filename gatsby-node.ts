@@ -77,14 +77,24 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions 
   }
 }
 
-export const onCreatePage: GatsbyNode["onCreatePage"] = async ({ page, actions }) => {
-  const { createPage } = actions
+// export const onCreatePage: GatsbyNode["onCreatePage"] = async ({ page, actions }) => {
+//   const { createPage } = actions
 
-  if (page.path === '/') {
-    page.matchPath = '/*'
-    createPage(page)
+//   if (page.path === '/') {
+//     page.matchPath = '/*'
+//     createPage(page)
+//   }
+// }
+// In gatsby-node.ts, add this after your createPages export
+export const onCreatePage: GatsbyNode["onCreatePage"] = async ({ page, actions }) => {
+  const { createPage } = actions;
+  // page.matchPath is a special key that's used for client-only routes.
+  if (page.path.match(/^\/app/)) {
+    page.matchPath = "/app/*";
+    // Update the page.
+    createPage(page);
   }
-}
+};
 
 // Example of adding custom fields to a node
 // export const onCreateNode: GatsbyNode["onCreateNode"] = async ({ node, actions, getNode }) => {
