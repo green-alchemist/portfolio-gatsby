@@ -1,11 +1,11 @@
 import { createGlobalStyle } from 'styled-components';
+import { Theme } from './theme';
 
-// This component will inject global styles into your app
-export const GlobalStyles = createGlobalStyle`
-  /* 1. Import your chosen fonts from Google Fonts */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&family=Lora:wght@400&family=Fira+Code&display=swap');
+export const GlobalStyles = createGlobalStyle<{ theme: Theme }>`
+  /* The @import rule has been removed from here.
+    The fonts are now loaded by the Seo component.
+  */
 
-  /* 2. Apply a modern CSS reset */
   *,
   *::before,
   *::after {
@@ -14,34 +14,26 @@ export const GlobalStyles = createGlobalStyle`
     padding: 0;
   }
 
-  html,
   body {
-    height: 100%;
-  }
-
-  /* 3. Apply your theme variables globally */
-  body {
-    font-family: ${props => props.theme.fonts.body};
-    background-color: ${props => props.theme.colors.background};
-    color: ${props => props.theme.colors.primaryText};
+    background: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors.primaryText};
+    font-family: ${({ theme }) => theme.fonts.body};
     line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s, color 0.3s;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: ${props => props.theme.fonts.heading};
-    font-weight: ${props => props.theme.fontWeights.bold};
-    color: ${props => props.theme.colors.primaryText};
+    font-family: ${({ theme }) => theme.fonts.heading};
+    font-weight: ${({ theme }) => theme.fontWeights.bold};
+    color: ${({ theme }) => theme.colors.primaryText};
   }
 
   a {
-    color: ${props => props.theme.colors.accent};
+    color: ${({ theme }) => theme.colors.accent};
     text-decoration: none;
-    cursor: pointer;
   }
 
   code {
-    font-family: ${props => props.theme.fonts.code};
+    font-family: ${({ theme }) => theme.fonts.code};
   }
 `;
-
