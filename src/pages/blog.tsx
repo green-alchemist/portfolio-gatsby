@@ -57,12 +57,12 @@ const BlogIndexPage: React.FC<BlogIndexProps> = ({ data }: BlogIndexProps) => {
 export default BlogIndexPage
 
 export const pageQuery = graphql`
-  query AllBlogPostsQuery {
+  query BlogIndex {
     allStrapiPost(sort: { publishedAt: DESC }) {
       nodes {
         id
-        slug
         title
+        slug
         publishedAt(formatString: "MMMM DD, YYYY")
       }
     }

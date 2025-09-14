@@ -2,6 +2,33 @@ import * as React from "react"
 import { graphql, PageProps, Link } from "gatsby"
 import styled from "styled-components"
 
+interface BlogPostData {
+  site: {
+    siteMetadata: {
+      title: string;
+    }
+  }
+  strapiPost: {
+    id: string;
+    title: string;
+    publishedAt: string;
+    body: {
+      data: {
+        childMarkdownRemark: {
+          html: string;
+        };
+      };
+    };
+  };
+  previous?: {
+    slug: string;
+    title: string;
+  };
+  next?: {
+    slug: string;
+    title: string;
+  };
+}
 // --- Styled Components ---
 
 const PostArticle = styled.article`
@@ -84,10 +111,9 @@ const PostFooterNav = styled.nav`
   font-family: ${props => props.theme.fonts.heading};
 `;
 
-const BlogPostTemplate: React.FC<PageProps> = (props: any) => {
-  const post = props.data.strapiPost
-  const { previous, next } = props.data;
-
+const BlogPostTemplate: React.FC<PageProps<BlogPostData>> = ({ data }) => {
+  const post = data.strapiPost;
+  const { previous, next } = data;
   return (
     <PostArticle>
       <PostHeader>
@@ -123,7 +149,16 @@ export const pageQuery = graphql`
     $previousPostId: String
     $nextPostId: String
   ) {
-    strapiPost(id: {eq: $id}) {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+    strapiPost(id: { eq: $id }) {
+      title
+      slug
+      publishedAt(formatString: "MMMM DD, YYYY")
+      updatedAt
       body {
         data {
           childMarkdownRemark {
@@ -131,9 +166,6 @@ export const pageQuery = graphql`
           }
         }
       }
-      slug
-      title
-      publishedAt(formatString: "MMMM DD, YYYY")
     }
     previous: strapiPost(id: { eq: $previousPostId }) {
       slug
@@ -143,6 +175,4 @@ export const pageQuery = graphql`
       slug
       title
     }
-  }
-`
-
+  }`;

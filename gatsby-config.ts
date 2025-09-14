@@ -9,6 +9,7 @@ const strapiConfig = {
   accessToken: process.env.STRAPI_TOKEN,
   collectionTypes: ['post', 'category'],
   singleTypes: ['header'],
+  alwaysUseMdx: false
 };
 
 const config: GatsbyConfig = {
@@ -22,11 +23,11 @@ const config: GatsbyConfig = {
   },
   graphqlTypegen: true,
   plugins: [
-    `gatsby-plugin-styled-components`,
     {
       resolve: `gatsby-source-strapi`,
       options: strapiConfig,
     },
+    `gatsby-plugin-styled-components`,
     `gatsby-transformer-remark`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,

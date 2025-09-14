@@ -40,11 +40,13 @@ interface BlogItemProps {
 }
 
 const BlogItem: React.FC<BlogItemProps> = ({ data }: BlogItemProps) => {
-  // We no longer need the navigate function, as the Link component handles it.
+  const { slug, title, publishedAt } = data;
+  const displayTitle = title || slug;
+
   return (
-    <ItemContainer to={`/blog/${data.slug}`}>
-      <PostTitle>{data.title}</PostTitle>
-      <PostDate>{data.publishedAt}</PostDate>
+    <ItemContainer to={`/blog/${slug}`}>
+      <PostTitle>{displayTitle}</PostTitle>
+      <PostDate>{new Date(publishedAt).toLocaleDateString()}</PostDate>
     </ItemContainer>
   );
 };
